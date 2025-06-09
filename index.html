@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crypto Predictor</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>BTC/ETH Price Direction Predictor</h1>
+    <label for="pair">Select Pair:</label>
+    <select id="pair">
+      <option value="BTCUSDT">BTC/USDT</option>
+      <option value="ETHUSDT">ETH/USDT</option>
+    </select>
+    <label for="targetTime">Target Time (dd.mm.yyyy hh:mm):</label>
+    <input type="text" id="targetTime" placeholder="e.g., 10.06.2025 18:30">
+    <button onclick="predict()">Predict</button>
+    <div id="result"></div>
+    <canvas id="priceChart"></canvas>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
