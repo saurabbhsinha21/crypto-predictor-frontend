@@ -1,32 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>BTC/ETH Price Direction Predictor</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <div class="container">
     <h1>BTC/ETH Price Direction Predictor</h1>
 
-    <label for="pair">Select Pair:</label>
+    <label for="pair"><strong>Select Pair:</strong></label>
     <select id="pair">
-      <option value="BTCUSDT">BTC/USDT</option>
-      <option value="ETHUSDT">ETH/USDT</option>
+      <option value="BTC/USDT">BTC/USDT</option>
+      <option value="ETH/USDT">ETH/USDT</option>
     </select>
 
-    <label for="targetTime">Target Time (dd.mm.yyyy hh:mm):</label>
-    <input type="text" id="targetTime" placeholder="10.06.2025 23:00">
+    <label for="targetTime"><strong>Target Time:</strong></label>
+    <input type="datetime-local" id="targetTime" />
 
-    <label for="targetPrice">Target Price:</label>
-    <input type="number" id="targetPrice" placeholder="e.g. 69500">
+    <label for="targetPrice"><strong>Target Price:</strong></label>
+    <input type="number" id="targetPrice" step="0.01" />
 
     <button onclick="predict()">Predict</button>
 
     <p id="result"></p>
 
-    <canvas id="priceChart" width="400" height="200"></canvas>
+    <canvas id="priceChart" height="200"></canvas>
   </div>
 
   <script src="script.js"></script>
