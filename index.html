@@ -1,32 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BTC/ETH Price Direction Predictor</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <title>Crypto Price Direction Predictor</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <div class="container">
-    <h1>BTC/ETH Price Direction Predictor</h1>
+    <div class="container">
+        <h1>Crypto Price Direction Predictor</h1>
+        <label for="pair">Select Pair:</label>
+        <select id="pair">
+            <option value="BTC/USDT">BTC/USDT</option>
+            <option value="ETH/USDT">ETH/USDT</option>
+        </select>
 
-    <label for="pair">Select Pair:</label>
-    <select id="pair">
-      <option value="BTC/USDT">BTC/USDT</option>
-      <option value="ETH/USDT">ETH/USDT</option>
-    </select>
+        <label for="targetTime">Target Time:</label>
+        <input type="datetime-local" id="targetTime">
 
-    <label for="targetTime">Target Time (system format):</label>
-    <input type="datetime-local" id="targetTime" />
+        <label for="targetPrice">Target Price:</label>
+        <input type="number" id="targetPrice" placeholder="Enter target price">
 
-    <label for="targetPrice">Target Price:</label>
-    <input type="number" id="targetPrice" placeholder="Enter target price" />
+        <button onclick="predict()">Get Prediction</button>
 
-    <button onclick="predict()">Predict</button>
+        <div id="predictionResult" class="prediction-result"></div>
 
-    <p id="result" class="result"></p>
-  </div>
+        <div class="charts-container">
+            <div class="chart-box">
+                <canvas id="priceChart"></canvas>
+            </div>
+            <div class="chart-box">
+                <div id="tradingview-widget"></div>
+            </div>
+        </div>
+    </div>
 
-  <script src="script.js"></script>
+    <script src="https://s3.tradingview.com/tv.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
