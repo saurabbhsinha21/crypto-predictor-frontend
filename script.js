@@ -19,9 +19,26 @@ function predict() {
   }
 
   const formattedTime = formatDateTimeLocal(timeRaw);
-  const direction = Math.random() > 0.5 ? "ABOVE" : "BELOW";
+ fetch("https://crypto-predictor-api.onrender.com/predict", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    pair,
+    target_price: parseFloat(targetPrice),
+    target_time: targetTime,
+  }),
+})
+  .then((response) => response.json())
+  .then((data) => {
+    const output = `Prediction: ${pair.replace("/", "")} will go ${data.prediction.toUpperCase()} the target price of ${targetPrice} by ${targetTime}<br>🔍 Confidence: ${(data.confidence * 100).toFixed(2)}%<br>📈 Current Price: ${data.current_price}`;
+    document.getElementById("result").innerHTML = output;
+  })
+  .catch((error) => {
+    document.getElementById("result").innerHTML = "❌ Error: " + error;
+  });
 
-  const resultText = `Mock prediction: ${pair.replace("/", "")} will go ${direction} the target price of ${price} by ${formattedTime}`;
   document.getElementById("result").innerText = resultText;
 
   drawChart();
