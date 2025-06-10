@@ -1,57 +1,33 @@
-const BACKEND_URL = "https://crypto-predictor-backend.onrender.com";
-
 async function predict() {
   const pair = document.getElementById("pair").value;
   const targetTime = document.getElementById("targetTime").value;
   const targetPrice = document.getElementById("targetPrice").value;
-  const result = document.getElementById("predictionResult");
-
-  if (!pair || !targetTime || !targetPrice) {
-    result.textContent = "Please fill all fields.";
-    return;
-  }
+  const result = document.getElementById("result");
 
   result.textContent = "Fetching prediction...";
-  console.log("Requesting prediction:", { pair, targetTime, targetPrice });
 
   try {
-    const resp = await fetch(`${BACKEND_URL}/predict`, {
+    const response = await fetch("https://crypto-predictor-backend.onrender.com/predict", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify({
-        pair,
+        pair: pair,
         target_time: targetTime,
         target_price: parseFloat(targetPrice)
       })
     });
 
-    console.log("Response status:", resp.status);
-    if (!resp.ok) {
-      const errText = await resp.text();
-      console.error("API returned error:", errText);
-      result.textContent = "Server error: " + errText;
-      return;
-    }
-
-    const data = await resp.json();
-    console.log("Prediction data:", data);
+    const data = await response.json();
 
     if (data.prediction) {
       result.textContent = data.prediction;
-    } else if (data.error) {
-      result.textContent = "Error: " + data.error;
     } else {
-      result.textContent = "Unexpected response format.";
-      console.warn("Full response object:", data);
+      result.textContent = "Prediction failed. Try again.";
     }
-
-  } catch (err) {
-    console.error("Fetch error:", err);
-    result.textContent = "Network error: " + err.message;
+  } catch (error) {
+    console.error(error);
+    result.textContent = "Error fetching prediction.";
   }
 }
-
-// Ensure chart loading and prediction button handler still works
-document.addEventListener("DOMContentLoaded", () => {
-  document.querySelector("button").addEventListener("click", predict);
-});
