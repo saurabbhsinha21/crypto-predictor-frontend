@@ -1,18 +1,13 @@
-const backendUrl = "https://crypto-predictor-backend.onrender.com";
-
-async function getPrediction() {
+async function predict() {
   const pair = document.getElementById("pair").value;
   const targetTime = document.getElementById("targetTime").value;
   const targetPrice = document.getElementById("targetPrice").value;
   const result = document.getElementById("result");
 
-  if (!pair || !targetTime || !targetPrice) {
-    result.textContent = "Please fill all fields.";
-    return;
-  }
+  result.textContent = "Fetching prediction...";
 
   try {
-    const response = await fetch(`${backendUrl}/predict`, {
+    const response = await fetch("https://crypto-predictor-backend.onrender.com/predict", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -26,13 +21,13 @@ async function getPrediction() {
 
     const data = await response.json();
 
-    if (data && data.prediction) {
-      result.textContent = `Prediction: ${data.prediction}`;
+    if (data.prediction) {
+      result.textContent = data.prediction;
     } else {
-      result.textContent = "Unexpected response from server.";
+      result.textContent = "Prediction failed. Try again.";
     }
   } catch (error) {
-    console.error("Error:", error);
+    console.error(error);
     result.textContent = "Error fetching prediction.";
   }
 }
