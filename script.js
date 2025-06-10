@@ -1,76 +1,56 @@
-function formatDateTimeLocal(input) {
-  const date = new Date(input);
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const year = date.getFullYear();
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-  return `${day}.${month}.${year} ${hours}:${minutes}`;
-}
-
-function predict() {
+document.getElementById("predictBtn").addEventListener("click", async () => {
   const pair = document.getElementById("pair").value;
-  const timeRaw = document.getElementById("targetTime").value;
-  const price = parseFloat(document.getElementById("targetPrice").value);
+  const targetTime = document.getElementById("targetTime").value;
+  const targetPrice = parseFloat(document.getElementById("targetPrice").value);
 
-  if (!timeRaw || !price) {
-    alert("Please enter both target time and price.");
+  if (!targetTime || isNaN(targetPrice)) {
+    document.getElementById("result").innerText = "Please enter both time and price.";
     return;
   }
 
-  const formattedTime = formatDateTimeLocal(timeRaw);
- fetch("https://crypto-predictor-api.onrender.com/predict", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({
-    pair,
-    target_price: parseFloat(targetPrice),
-    target_time: targetTime,
-  }),
-})
-  .then((response) => response.json())
-  .then((data) => {
-    const output = `Prediction: ${pair.replace("/", "")} will go ${data.prediction.toUpperCase()} the target price of ${targetPrice} by ${targetTime}<br>🔍 Confidence: ${(data.confidence * 100).toFixed(2)}%<br>📈 Current Price: ${data.current_price}`;
-    document.getElementById("result").innerHTML = output;
-  })
-  .catch((error) => {
-    document.getElementById("result").innerHTML = "❌ Error: " + error;
-  });
+  document.getElementById("result").innerText = "Predicting...";
 
-  document.getElementById("result").innerText = resultText;
+  try {
+    const response = await fetch('https://your-render-api-url.com/predict', {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ pair, target_time: targetTime, target_price: targetPrice })
+    });
 
-  drawChart();
-}
+    const data = await response.json();
 
-function drawChart() {
-  const ctx = document.getElementById("priceChart").getContext("2d");
-  const data = {
-    labels: Array.from({ length: 20 }, (_, i) => `${i}m`),
-    datasets: [{
-      label: "Price",
-      data: Array.from({ length: 20 }, () => 68000 + Math.random() * 1000),
-      borderColor: "blue",
-      borderWidth: 2,
-      fill: false,
-      tension: 0.3
-    }]
-  };
+    document.getElementById("result").innerHTML =
+      `<p><strong>Prediction:</strong> ${pair} will go <b>${data.direction}</b> the target price of ${targetPrice} by ${targetTime}</p>`;
 
-  if (window.priceChart) {
-    window.priceChart.destroy();
+    drawChart(data.timestamps, data.prices);
+
+  } catch (error) {
+    console.error("Error:", error);
+    document.getElementById("result").innerText = "Error fetching prediction.";
   }
+});
+
+function drawChart(labels, prices) {
+  const ctx = document.getElementById("priceChart").getContext("2d");
+  if (window.priceChart) window.priceChart.destroy();
 
   window.priceChart = new Chart(ctx, {
     type: "line",
-    data: data,
+    data: {
+      labels,
+      datasets: [{
+        label: "Price",
+        data: prices,
+        borderColor: "blue",
+        borderWidth: 2,
+        fill: false,
+        pointRadius: 0,
+      }]
+    },
     options: {
-      responsive: true,
       scales: {
-        y: {
-          beginAtZero: false
-        }
+        x: { display: true },
+        y: { beginAtZero: false }
       }
     }
   });
