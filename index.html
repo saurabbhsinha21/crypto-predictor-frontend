@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BTC/ETH Price Predictor</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>Crypto Predictor</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
-    <h1>BTC/ETH Price Predictor</h1>
+    <h1>Crypto Price Direction Predictor</h1>
 
     <label for="pair">Select Pair:</label>
     <select id="pair">
@@ -17,14 +16,14 @@
     </select>
 
     <label for="targetTime">Target Time:</label>
-    <input type="datetime-local" id="targetTime" />
+    <input type="datetime-local" id="targetTime">
 
     <label for="targetPrice">Target Price:</label>
-    <input type="number" id="targetPrice" placeholder="Enter target price" />
+    <input type="number" id="targetPrice" step="0.01">
 
-    <button onclick="predict()">Predict</button>
+    <button id="predictBtn">Predict</button>
 
-    <p id="result" class="result"></p>
+    <p id="result"></p>
   </div>
 
   <script src="script.js"></script>
