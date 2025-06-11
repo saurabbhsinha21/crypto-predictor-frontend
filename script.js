@@ -1,15 +1,18 @@
-async function predict() {
+document.getElementById("predictBtn").addEventListener("click", async () => {
   const pair = document.getElementById("pair").value;
   const targetTime = document.getElementById("targetTime").value;
-  const targetPrice = document.getElementById("targetPrice").value;
-  const result = document.getElementById("result");
+  const targetPrice = parseFloat(document.getElementById("targetPrice").value);
 
-  if (!targetTime || !targetPrice) {
-    result.textContent = "Please enter both target time and target price.";
+  if (!pair || !targetTime || isNaN(targetPrice)) {
+    alert("Please fill in all fields correctly.");
     return;
   }
 
-  result.textContent = "Fetching prediction...";
+  const payload = {
+    pair,
+    target_time: targetTime,
+    target_price: targetPrice
+  };
 
   try {
     const response = await fetch("https://crypto-predictor-backend.onrender.com/predict", {
@@ -17,24 +20,18 @@ async function predict() {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        pair: pair,
-        target_time: targetTime,
-        target_price: parseFloat(targetPrice)
-      })
+      body: JSON.stringify(payload)
     });
 
     const data = await response.json();
 
-    if (data.prediction) {
-      result.textContent = data.prediction;
-    } else if (data.error) {
-      result.textContent = "Error: " + data.error;
+    if (data && data.prediction) {
+      document.getElementById("result").innerText = `${pair} will go ${data.prediction.toUpperCase()} the target price of ${targetPrice} by ${targetTime}`;
     } else {
-      result.textContent = "Unexpected response. Try again.";
+      document.getElementById("result").innerText = "Prediction failed. Please try again.";
     }
   } catch (error) {
-    console.error(error);
-    result.textContent = "Error fetching prediction.";
+    console.error("Error fetching prediction:", error);
+    document.getElementById("result").innerText = "Server error or prediction failed.";
   }
-}
+});
