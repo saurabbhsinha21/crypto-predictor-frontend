@@ -4,6 +4,11 @@ async function predict() {
   const targetPrice = document.getElementById("targetPrice").value;
   const result = document.getElementById("result");
 
+  if (!targetTime || !targetPrice) {
+    result.textContent = "Please enter both target time and target price.";
+    return;
+  }
+
   result.textContent = "Fetching prediction...";
 
   try {
@@ -23,8 +28,10 @@ async function predict() {
 
     if (data.prediction) {
       result.textContent = data.prediction;
+    } else if (data.error) {
+      result.textContent = "Error: " + data.error;
     } else {
-      result.textContent = "Prediction failed. Try again.";
+      result.textContent = "Unexpected response. Try again.";
     }
   } catch (error) {
     console.error(error);
